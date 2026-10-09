@@ -1,1020 +1,743 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DESHA & MARO FQ GAMES</title>
-<style>
-/* ==================== RESET & BASE ==================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #000;
-  color: #fff;
-  user-select: none;
-}
-
-/* ==================== SCREENS ==================== */
-.screen {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
-  animation: fadeIn 0.4s ease;
-}
-
-.screen.active {
-  display: flex;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px #DC143C); }
-  50% { transform: scale(1.06); filter: drop-shadow(0 0 30px #FFD700); }
-}
-
-@keyframes glow {
-  0%, 100% { text-shadow: 0 0 15px #DC143C, 0 0 30px #8B0000; }
-  50% { text-shadow: 0 0 25px #FFD700, 0 0 50px #DC143C; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ==================== SPLASH SCREEN ==================== */
-#splashScreen {
-  background: radial-gradient(circle at center, #2a0000 0%, #0a0a0a 60%, #000 100%);
-}
-
-.game-logo {
-  width: 180px;
-  height: 180px;
-  object-fit: contain;
-  animation: pulse 2.5s infinite;
-  margin-bottom: 20px;
-}
-
-.game-title {
-  font-size: 26px;
-  font-weight: bold;
-  color: #FFD700;
-  letter-spacing: 2px;
-  text-align: center;
-  animation: glow 2s infinite;
-  margin-bottom: 10px;
-  padding: 0 15px;
-}
-
-.game-subtitle {
-  font-size: 13px;
-  color: #DC143C;
-  letter-spacing: 4px;
-  margin-bottom: 40px;
-}
-
-.loading-bar {
-  width: 200px;
-  height: 4px;
-  background: #1a0000;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 60px;
-  border: 1px solid #8B0000;
-}
-
-.loading-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #DC143C, #FFD700);
-  animation: loadFill 2.5s ease forwards;
-  box-shadow: 0 0 10px #DC143C;
-}
-
-@keyframes loadFill {
-  from { width: 0%; }
-  to { width: 100%; }
-}
-
-.dev-section {
-  position: absolute;
-  bottom: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  animation: slideUp 1s ease 1s both;
-}
-
-.dev-logo {
-  width: 55px;
-  height: 55px;
-  object-fit: contain;
-  border-radius: 50%;
-  border: 2px solid #FFD700;
-  padding: 3px;
-  background: #0a0a0a;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-}
-
-.dev-label {
-  font-size: 10px;
-  color: #888;
-  letter-spacing: 2px;
-}
-
-.dev-name {
-  font-size: 15px;
-  color: #FFD700;
-  font-weight: bold;
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px #DC143C;
-}
-
-/* ==================== AUTH SCREEN ==================== */
-#authScreen {
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 50%, #0a0a0a 100%);
-}
-
-.auth-container {
-  width: 100%;
-  max-width: 380px;
-  background: rgba(10, 0, 0, 0.85);
-  border: 2px solid #8B0000;
-  border-radius: 20px;
-  padding: 30px 25px;
-  box-shadow: 0 0 40px rgba(220, 20, 60, 0.4), inset 0 0 20px rgba(220, 20, 60, 0.1);
-  animation: slideUp 0.5s ease;
-}
-
-.auth-logo-small {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto 15px;
-  filter: drop-shadow(0 0 10px #DC143C);
-}
-
-.auth-title {
-  text-align: center;
-  color: #FFD700;
-  font-size: 22px;
-  margin-bottom: 25px;
-  letter-spacing: 1px;
-}
-
-.input-group {
-  margin-bottom: 15px;
-}
-
-.input-group label {
-  display: block;
-  color: #FFD700;
-  font-size: 13px;
-  margin-bottom: 6px;
-  padding-right: 5px;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 14px 16px;
-  background: #0d0d0d;
-  border: 2px solid #8B0000;
-  border-radius: 12px;
-  color: #fff;
-  font-size: 15px;
-  transition: all 0.3s;
-  outline: none;
-}
-
-.input-group input:focus {
-  border-color: #FFD700;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-  background: #150000;
-}
-
-.input-group input::placeholder {
-  color: #555;
-}
-
-.btn {
-  width: 100%;
-  padding: 15px;
-  border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 10px;
-  letter-spacing: 1px;
-  font-family: inherit;
-}
-
-.btn:active {
-  transform: scale(0.97);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #DC143C, #8B0000);
-  color: #fff;
-  border: 2px solid #FFD700;
-  box-shadow: 0 5px 20px rgba(220, 20, 60, 0.5);
-}
-
-.btn-primary:active {
-  background: linear-gradient(135deg, #8B0000, #DC143C);
-  box-shadow: 0 0 25px #DC143C;
-}
-
-.btn-secondary {
-  background: transparent;
-  color: #FFD700;
-  border: 2px solid #FFD700;
-}
-
-.btn-secondary:active {
-  background: #FFD700;
-  color: #000;
-}
-
-.switch-mode {
-  text-align: center;
-  color: #888;
-  font-size: 13px;
-  margin-top: 20px;
-}
-
-.switch-mode span {
-  color: #FFD700;
-  cursor: pointer;
-  font-weight: bold;
-  text-decoration: underline;
-}
-
-.error-msg {
-  color: #FF4444;
-  text-align: center;
-  font-size: 13px;
-  margin-top: 10px;
-  min-height: 18px;
-}
-
-/* ==================== MAIN MENU ==================== */
-#mainMenu {
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 100%);
-  justify-content: flex-start;
-  padding-top: 20px;
-}
-
-.top-bar {
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 15px;
-  background: rgba(26, 0, 0, 0.8);
-  border: 1px solid #8B0000;
-  border-radius: 15px;
-  margin-bottom: 25px;
-  animation: slideUp 0.5s ease;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #DC143C, #8B0000);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: #FFD700;
-  font-weight: bold;
-  border: 2px solid #FFD700;
-}
-
-.user-details {
-  display: flex;
-  flex-direction: column;
-}
-
-.user-name {
-  font-size: 14px;
-  color: #FFD700;
-  font-weight: bold;
-}
-
-.user-div {
-  font-size: 11px;
-  color: #DC143C;
-}
-
-.logout-btn {
-  background: #8B0000;
-  border: 1px solid #DC143C;
-  color: #fff;
-  padding: 8px 15px;
-  border-radius: 8px;
-  font-size: 12px;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: bold;
-}
-
-.menu-logo {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-  margin-bottom: 10px;
-  filter: drop-shadow(0 0 15px #DC143C);
-}
-
-.menu-title {
-  color: #FFD700;
-  font-size: 20px;
-  margin-bottom: 30px;
-  letter-spacing: 2px;
-  text-align: center;
-}
-
-.menu-buttons {
-  width: 100%;
-  max-width: 350px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.menu-btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 22px;
-  background: linear-gradient(135deg, #1a0000, #2a0000);
-  border: 2px solid #DC143C;
-  border-radius: 15px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-family: inherit;
-  position: relative;
-  overflow: hidden;
-}
-
-.menu-btn::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.menu-btn:active::before {
-  left: 100%;
-}
-
-.menu-btn:active {
-  background: linear-gradient(135deg, #DC143C, #8B0000);
-  border-color: #FFD700;
-  transform: scale(0.98);
-  box-shadow: 0 0 25px #DC143C;
-}
-
-.menu-btn .icon {
-  font-size: 24px;
-}
-
-.menu-btn .text {
-  flex: 1;
-  text-align: right;
-  padding-right: 15px;
-}
-
-.menu-btn .arrow {
-  color: #FFD700;
-  font-size: 20px;
-}
-
-/* ==================== OFFLINE SCREEN ==================== */
-#offlineScreen {
-  background: linear-gradient(135deg, #0a0a0a, #1a0000);
-}
-
-.screen-header {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  left: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.back-btn {
-  background: #8B0000;
-  border: 2px solid #FFD700;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: bold;
-}
-
-.screen-title {
-  color: #FFD700;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.difficulty-container {
-  width: 100%;
-  max-width: 350px;
-  margin-top: 60px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.difficulty-title {
-  text-align: center;
-  color: #fff;
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-.diff-btn {
-  padding: 20px;
-  border-radius: 15px;
-  border: 2px solid;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.diff-btn:active {
-  transform: scale(0.97);
-}
-
-.diff-easy {
-  background: linear-gradient(135deg, #0a3a0a, #0a5a0a);
-  border-color: #00FF00;
-  color: #fff;
-}
-
-.diff-easy:active {
-  box-shadow: 0 0 25px #00FF00;
-}
-
-.diff-medium {
-  background: linear-gradient(135deg, #3a3a0a, #5a5a0a);
-  border-color: #FFD700;
-  color: #fff;
-}
-
-.diff-medium:active {
-  box-shadow: 0 0 25px #FFD700;
-}
-
-.diff-hard {
-  background: linear-gradient(135deg, #3a0a0a, #5a0a0a);
-  border-color: #DC143C;
-  color: #fff;
-}
-
-.diff-hard:active {
-  box-shadow: 0 0 25px #DC143C;
-}
-
-.diff-btn .diff-icon {
-  font-size: 28px;
-}
-
-.diff-btn .diff-text {
-  flex: 1;
-  padding-right: 15px;
-  text-align: right;
-}
-
-.diff-btn .diff-desc {
-  font-size: 11px;
-  opacity: 0.8;
-  font-weight: normal;
-  display: block;
-  margin-top: 3px;
-}
-
-/* ==================== NOTIFICATION ==================== */
-.notification {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-100px);
-  background: linear-gradient(135deg, #DC143C, #8B0000);
-  color: #fff;
-  padding: 12px 25px;
-  border-radius: 12px;
-  border: 2px solid #FFD700;
-  font-size: 14px;
-  font-weight: bold;
-  z-index: 9999;
-  transition: transform 0.4s ease;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-  max-width: 90%;
-  text-align: center;
-}
-
-.notification.show {
-  transform: translateX(-50%) translateY(0);
-}
-
-/* ==================== SCROLLBAR ==================== */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-::-webkit-scrollbar-thumb {
-  background: #DC143C;
-  border-radius: 10px;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-height: 600px) {
-  .game-logo { width: 120px; height: 120px; }
-  .game-title { font-size: 20px; }
-  .menu-logo { width: 70px; height: 70px; }
-  .menu-btn { padding: 14px 18px; font-size: 14px; }
-  .dev-section { bottom: 10px; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Sky Master | تكييف و تبريد</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f6f9fc 0%, #e9f2f8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        /* التطبيق يكون في ملف واحد وهمي */
+        .app-container {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 48px;
+            box-shadow: 0 25px 50px -12px rgba(0, 40, 60, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+            padding: 24px 18px 28px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        /* شاشة الترحيب */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 28px 8px;
+            gap: 28px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .logo-company {
+            width: 140px;
+            max-width: 70%;
+            filter: drop-shadow(0 8px 14px rgba(0, 100, 148, 0.2));
+        }
+
+        .logo-dev {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #ffffff;
+            padding: 6px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .dev-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dev-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #0b3b4e;
+            letter-spacing: 0.5px;
+        }
+
+        .slogan {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1d6f8f;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            line-height: 1.5;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            margin-top: 8px;
+        }
+
+        /* شاشة تسجيل الدخول / إنشاء حساب */
+        .auth-screen {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 10px 8px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .auth-title {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: #0b3b4e;
+            margin-bottom: 8px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #2b5d72;
+            padding-right: 6px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 18px;
+            border-radius: 34px;
+            border: 1px solid #cbdde8;
+            background: #ffffffd9;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            color: #103544;
+            font-weight: 500;
+        }
+
+        .input-group input:focus {
+            border-color: #2894c7;
+            box-shadow: 0 0 0 4px rgba(40, 148, 199, 0.15);
+            background: #ffffff;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            background: white;
+            color: #0b3b4e;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0f4e6b, #1b6f8f);
+            color: white;
+            box-shadow: 0 12px 22px -8px #0f4e6b80;
+            border: 1px solid #ffffff60;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0b3e56, #135f7a);
+            transform: scale(1.01);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #1b6f8f;
+            color: #1b6f8f;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: #e1f0f7;
+        }
+
+        .guest-link {
+            text-align: center;
+            font-weight: 600;
+            color: #247a9e;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            cursor: pointer;
+            padding: 6px 0;
+            font-size: 1rem;
+            background: transparent;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .guest-link:hover {
+            color: #0b3b4e;
+        }
+
+        .error-msg {
+            color: #b13e3e;
+            font-size: 0.85rem;
+            text-align: center;
+            min-height: 20px;
+            font-weight: 500;
+        }
+
+        /* الشاشة الرئيسية */
+        .main-screen {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .header-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .company-logo-large {
+            width: 120px;
+            max-width: 60%;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 10px 14px rgba(0, 80, 110, 0.15));
+        }
+
+        .user-greeting {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0b3b4e;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 6px 22px;
+            border-radius: 40px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
+            border: 1px solid #ffffffd0;
+            margin-top: 4px;
+        }
+
+        .order-count {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1d6f8f;
+            background: #e3f0f7;
+            padding: 6px 18px;
+            border-radius: 40px;
+            display: inline-block;
+            border: 1px solid #b9d9e9;
+        }
+
+        .services-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0e4359;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-right: 5px solid #1b6f8f;
+            padding-right: 12px;
+        }
+
+        .services-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid #ffffffd0;
+            transition: all 0.2s;
+        }
+
+        .service-card:hover {
+            background: #ffffff;
+            box-shadow: 0 12px 24px -8px rgba(20, 90, 120, 0.2);
+        }
+
+        .service-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .service-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0b3b4e;
+        }
+
+        .service-price {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #1d6f8f;
+            background: #e3f0f7;
+            padding: 4px 14px;
+            border-radius: 40px;
+            white-space: nowrap;
+        }
+
+        .service-desc {
+            font-size: 0.9rem;
+            color: #476f82;
+            margin-bottom: 4px;
+        }
+
+        .btn-service {
+            background: linear-gradient(135deg, #1b6f8f, #13556e);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 14px 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 16px -6px #0f4e6b80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-service:active {
+            transform: scale(0.98);
+        }
+
+        .btn-service i {
+            font-style: normal;
+            font-size: 1.2rem;
+        }
+
+        /* الفوتر */
+        .footer {
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 2px dashed #b8d4e3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .contact-label {
+            font-weight: 600;
+            color: #2b5d72;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+            text-align: center;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .contact-btn {
+            background: white;
+            border: none;
+            border-radius: 40px;
+            padding: 12px 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #0b3b4e;
+            text-decoration: none;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+            border: 1px solid #d9eaf3;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .contact-btn:hover {
+            background: #f3faff;
+            border-color: #a7cbdf;
+        }
+
+        .phone-number {
+            direction: ltr;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* لمسات صغيرة */
+        .whatsapp-icon, .fb-icon, .phone-icon {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .badge-guest {
+            background: #eaeef2;
+            color: #3f5e6b;
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
+    <div class="app-container" id="appContainer">
+        <!-- شاشة الترحيب -->
+        <div id="welcomeScreen" class="welcome-screen">
+            <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/1f9c3c0c-94e2-4c38-ad99-27b24d3f34b5.png" alt="Sky Master" class="logo-company">
+            <div class="dev-info">
+                <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/dcbe3ae7-7c18-43cf-8e70-c2b73089969e.png" alt="DESHA.245" class="logo-dev">
+                <span class="dev-name">DESHA.245</span>
+            </div>
+            <div class="slogan">مع شركه سكاي ماستر دائما كن مطمئنًا</div>
+        </div>
 
-<!-- ==================== شاشة الترحيب ==================== -->
-<div id="splashScreen" class="screen active">
-  <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" 
-       class="game-logo" 
-       alt="Game Logo"
-       onerror="this.style.display='none'">
-  <h1 class="game-title">DESHA & MARO FQ GAMES</h1>
-  <p class="game-subtitle">FOOTBALL QUIZ</p>
-  <div class="loading-bar">
-    <div class="loading-fill"></div>
-  </div>
-  <div class="dev-section">
-    <span class="dev-label">DEVELOPED BY</span>
-    <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/dcbe3ae7-7c18-43cf-8e70-c2b73089969e.png" 
-         class="dev-logo" 
-         alt="Developer Logo"
-         onerror="this.style.display='none'">
-    <span class="dev-name">DESHA.245</span>
-  </div>
-</div>
+        <!-- شاشة تسجيل الدخول / إنشاء حساب -->
+        <div id="authScreen" class="auth-screen hidden">
+            <div class="auth-title">إنشاء حساب أو تسجيل دخول</div>
+            <div class="input-group">
+                <label>اسم المستخدم</label>
+                <input type="text" id="usernameInput" placeholder="مثال: أحمد محمد" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>كلمة المرور (اختياري)</label>
+                <input type="password" id="passwordInput" placeholder="••••••••">
+            </div>
+            <div id="authError" class="error-msg"></div>
+            <button class="btn btn-primary" id="loginBtn">تسجيل الدخول</button>
+            <button class="btn btn-outline" id="registerBtn">إنشاء حساب جديد</button>
+            <button class="guest-link" id="guestBtn">الدخول كضيف ➔</button>
+        </div>
 
-<!-- ==================== شاشة تسجيل الدخول ==================== -->
-<div id="authScreen" class="screen">
-  <div class="auth-container">
-    <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" 
-         class="auth-logo-small" 
-         alt="Logo"
-         onerror="this.style.display='none'">
-    <h2 class="auth-title" id="authTitle">تسجيل الدخول</h2>
-    
-    <div class="input-group" id="usernameGroup" style="display:none;">
-      <label>اسم المستخدم</label>
-      <input type="text" id="usernameInput" placeholder="مثال: Mohamed77" autocomplete="off">
+        <!-- الشاشة الرئيسية -->
+        <div id="mainScreen" class="main-screen hidden">
+            <div class="header-main">
+                <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/1f9c3c0c-94e2-4c38-ad99-27b24d3f34b5.png" alt="Sky Master" class="company-logo-large">
+                <div class="user-greeting" id="userGreeting">ضيف</div>
+                <div class="order-count" id="orderCount">عدد الطلبات: 0</div>
+            </div>
+
+            <div class="services-title">🛠️ خدماتنا وأسعارها</div>
+            <div class="services-grid" id="servicesGrid"></div>
+
+            <!-- الفوتر: تواصل معنا -->
+            <div class="footer">
+                <div class="contact-label">📞 تواصل معنا عبر</div>
+                <div class="contact-links">
+                    <a href="https://wa.me/201284999539" target="_blank" class="contact-btn">
+                        <span class="whatsapp-icon">💬</span> واتساب
+                    </a>
+                    <a href="https://www.facebook.com/share/1Jj569DaXT/" target="_blank" class="contact-btn">
+                        <span class="fb-icon">📘</span> فيسبوك
+                    </a>
+                    <a href="tel:01284999539" class="contact-btn">
+                        <span class="phone-icon">📞</span> <span class="phone-number">01284999539</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div class="input-group">
-      <label>البريد الإلكتروني</label>
-      <input type="email" id="emailInput" placeholder="example@gmail.com" autocomplete="off">
-    </div>
-    
-    <div class="input-group">
-      <label>كلمة المرور</label>
-      <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="off">
-    </div>
-    
-    <button class="btn btn-primary" id="authBtn" onclick="handleAuth()">دخول</button>
-    
-    <p class="switch-mode">
-      <span id="switchText">ليس لديك حساب؟ سجل الآن</span>
-    </p>
-    
-    <p class="error-msg" id="errorMsg"></p>
-  </div>
-</div>
 
-<!-- ==================== القائمة الرئيسية ==================== -->
-<div id="mainMenu" class="screen">
-  <div class="top-bar">
-    <div class="user-info">
-      <div class="user-avatar" id="userAvatar">M</div>
-      <div class="user-details">
-        <span class="user-name" id="displayName">Player</span>
-        <span class="user-div" id="displayDiv">هاوي ⚽</span>
-      </div>
-    </div>
-    <button class="logout-btn" onclick="handleLogout()">خروج</button>
-  </div>
-  
-  <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" 
-       class="menu-logo" 
-       alt="Logo"
-       onerror="this.style.display='none'">
-  <h2 class="menu-title">القائمة الرئيسية</h2>
-  
-  <div class="menu-buttons">
-    <button class="menu-btn" onclick="goToScreen('divisionScreen')">
-      <span class="icon">🎯</span>
-      <span class="text">الديفجنات</span>
-      <span class="arrow">◄</span>
-    </button>
-    
-    <button class="menu-btn" onclick="goToScreen('onlineScreen')">
-      <span class="icon">🌐</span>
-      <span class="text">لعب أونلاين</span>
-      <span class="arrow">◄</span>
-    </button>
-    
-    <button class="menu-btn" onclick="goToScreen('offlineScreen')">
-      <span class="icon">📴</span>
-      <span class="text">وضع الأوفلاين</span>
-      <span class="arrow">◄</span>
-    </button>
-    
-    <button class="menu-btn" onclick="goToScreen('statsScreen')">
-      <span class="icon">📊</span>
-      <span class="text">الإحصائيات</span>
-      <span class="arrow">◄</span>
-    </button>
-  </div>
-</div>
+    <script>
+        (function() {
+            // === البيانات الأساسية ===
+            const COMPANY_WHATSAPP = "201284999539"; // رقم الواتساب بصيغة دولية
+            const SERVICES = [
+                { id: 1, name: "صيانه تكييف 1.5 حصان او 2 حصان", price: "200 ج.م", desc: "صيانة شاملة للوحدات الصغيرة" },
+                { id: 2, name: "صيانه تكييف 2.5 حصان او 3 حصان", price: "300 ج.م", desc: "صيانة للوحدات المتوسطة" },
+                { id: 3, name: "صيانه تكييف من 3.5 حصان حتي 5 حصان", price: "450 ج.م", desc: "صيانة للوحدات الكبيرة" },
+                { id: 4, name: "صيانه تكييف مركزي", price: "يحدد لاحقاً", desc: "صيانة التكييف المركزي" },
+                { id: 5, name: "تزويد فريون", price: "150 ج.م", desc: "شحن غاز التبريد" },
+                { id: 6, name: "غسل و تنظيف تكييف عادي", price: "180 ج.م", desc: "تنظيف الوحدة الداخلية والخارجية" },
+                { id: 7, name: "غسل و تنظيف تكييف بالكيميكال", price: "250 ج.م", desc: "تنظيف عميق بالمواد الكيميائية" }
+            ];
 
-<!-- ==================== شاشة الأوفلاين ==================== -->
-<div id="offlineScreen" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goToScreen('mainMenu')">رجوع ►</button>
-    <span class="screen-title">الأوفلاين</span>
-  </div>
-  
-  <div class="difficulty-container">
-    <p class="difficulty-title">اختر مستوى الذكاء الاصطناعي</p>
-    
-    <button class="diff-btn diff-easy" onclick="startOfflineMatch('easy')">
-      <span class="diff-icon">🟢</span>
-      <span class="diff-text">
-        سهل
-        <span class="diff-desc">رد بطيء - دقة منخفضة</span>
-      </span>
-    </button>
-    
-    <button class="diff-btn diff-medium" onclick="startOfflineMatch('medium')">
-      <span class="diff-icon">🟡</span>
-      <span class="diff-text">
-        متوسط
-        <span class="diff-desc">رد متوسط - دقة معتدلة</span>
-      </span>
-    </button>
-    
-    <button class="diff-btn diff-hard" onclick="startOfflineMatch('hard')">
-      <span class="diff-icon">🔴</span>
-      <span class="diff-text">
-        صعب
-        <span class="diff-desc">رد سريع - دقة عالية</span>
-      </span>
-    </button>
-  </div>
-</div>
+            // === الحالة ===
+            let currentUser = null;      // اسم المستخدم أو "ضيف"
+            let isGuest = false;
+            let userOrders = 0;
 
-<!-- ==================== شاشات مبدئية (سنكملها) ==================== -->
-<div id="divisionScreen" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goToScreen('mainMenu')">رجوع ►</button>
-    <span class="screen-title">الديفجنات</span>
-  </div>
-  <h2 style="color:#FFD700;margin-top:100px;">🎯 الديفجنات قريباً</h2>
-</div>
+            // === عناصر DOM ===
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const authScreen = document.getElementById('authScreen');
+            const mainScreen = document.getElementById('mainScreen');
+            const usernameInput = document.getElementById('usernameInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const authError = document.getElementById('authError');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const guestBtn = document.getElementById('guestBtn');
+            const userGreeting = document.getElementById('userGreeting');
+            const orderCountSpan = document.getElementById('orderCount');
+            const servicesGrid = document.getElementById('servicesGrid');
 
-<div id="onlineScreen" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goToScreen('mainMenu')">رجوع ►</button>
-    <span class="screen-title">أونلاين</span>
-  </div>
-  <h2 style="color:#FFD700;margin-top:100px;">🌐 الأونلاين قريباً</h2>
-</div>
+            // === دوال مساعدة للتخزين ===
+            function getUsers() {
+                const users = localStorage.getItem('skymaster_users');
+                return users ? JSON.parse(users) : {};
+            }
 
-<div id="statsScreen" class="screen">
-  <div class="screen-header">
-    <button class="back-btn" onclick="goToScreen('mainMenu')">رجوع ►</button>
-    <span class="screen-title">الإحصائيات</span>
-  </div>
-  <h2 style="color:#FFD700;margin-top:100px;">📊 الإحصائيات قريباً</h2>
-</div>
+            function saveUsers(users) {
+                localStorage.setItem('skymaster_users', JSON.stringify(users));
+            }
 
-<!-- ==================== إشعار ==================== -->
-<div class="notification" id="notification"></div>
+            function getOrdersForUser(username) {
+                if (!username || username === 'ضيف') return 0;
+                const orders = localStorage.getItem(`skymaster_orders_${username}`);
+                return orders ? parseInt(orders, 10) : 0;
+            }
 
-<script>
-/* ================================================================
-   DESHA & MARO FQ GAMES - Core Script v1.0
-   ================================================================ */
+            function incrementOrderForUser(username) {
+                if (!username || username === 'ضيف') return 0; // الضيف لا يُحسب له طلبات (يمكن تعديله)
+                let current = getOrdersForUser(username);
+                current += 1;
+                localStorage.setItem(`skymaster_orders_${username}`, current);
+                return current;
+            }
 
-// ==================== حالة اللعبة ====================
-const GameState = {
-  user: null,           // بيانات المستخدم
-  isLoggedIn: false,
-  isSignupMode: false,
-  currentScreen: 'splashScreen',
-  aiDifficulty: 'medium',
-  currentMatch: null
-};
+            // === عرض شاشة الترحيب ثم الانتقال ===
+            function showWelcomeAndProceed() {
+                welcomeScreen.classList.remove('hidden');
+                authScreen.classList.add('hidden');
+                mainScreen.classList.add('hidden');
 
-// ==================== التقسيمات ====================
-const DIVISIONS = [
-  { id: 1, name: "هاوي",         emoji: "🥉", matches: 10, aiLevel: "very_easy" },
-  { id: 2, name: "نصف محترف",    emoji: "🥈", matches: 10, aiLevel: "easy" },
-  { id: 3, name: "محترف",        emoji: "🥇", matches: 10, aiLevel: "easy_medium" },
-  { id: 4, name: "متميز",        emoji: "⭐", matches: 15, aiLevel: "medium" },
-  { id: 5, name: "عالمي",        emoji: "🌟", matches: 15, aiLevel: "medium_hard" },
-  { id: 6, name: "مثقف",         emoji: "💎", matches: 20, aiLevel: "hard" },
-  { id: 7, name: "مختم اللعبة",  emoji: "👑", matches: 25, aiLevel: "very_hard" }
-];
+                setTimeout(() => {
+                    welcomeScreen.classList.add('hidden');
+                    authScreen.classList.remove('hidden');
+                }, 2200); // بعد 2.2 ثانية
+            }
 
-// ==================== التنقل بين الشاشات ====================
-function goToScreen(screenId) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  const target = document.getElementById(screenId);
-  if (target) {
-    target.classList.add('active');
-    GameState.currentScreen = screenId;
-  }
-}
+            // === دوال التنقل ===
+            function goToAuth() {
+                welcomeScreen.classList.add('hidden');
+                authScreen.classList.remove('hidden');
+                mainScreen.classList.add('hidden');
+            }
 
-// ==================== الإشعارات ====================
-function showNotification(msg, duration = 2500) {
-  const notif = document.getElementById('notification');
-  notif.textContent = msg;
-  notif.classList.add('show');
-  setTimeout(() => notif.classList.remove('show'), duration);
-}
+            function goToMain() {
+                welcomeScreen.classList.add('hidden');
+                authScreen.classList.add('hidden');
+                mainScreen.classList.remove('hidden');
+                renderMainScreen();
+            }
 
-// ==================== تسجيل الدخول / التسجيل ====================
-function toggleAuthMode() {
-  GameState.isSignupMode = !GameState.isSignupMode;
-  
-  const usernameGroup = document.getElementById('usernameGroup');
-  const authTitle = document.getElementById('authTitle');
-  const authBtn = document.getElementById('authBtn');
-  const switchText = document.getElementById('switchText');
-  
-  if (GameState.isSignupMode) {
-    usernameGroup.style.display = 'block';
-    authTitle.textContent = 'إنشاء حساب جديد';
-    authBtn.textContent = 'سجل الآن';
-    switchText.textContent = 'لديك حساب؟ سجل الدخول';
-  } else {
-    usernameGroup.style.display = 'none';
-    authTitle.textContent = 'تسجيل الدخول';
-    authBtn.textContent = 'دخول';
-    switchText.textContent = 'ليس لديك حساب؟ سجل الآن';
-  }
-  
-  document.getElementById('errorMsg').textContent = '';
-}
+            // === عرض الشاشة الرئيسية ===
+            function renderMainScreen() {
+                // اسم المستخدم
+                if (isGuest || !currentUser) {
+                    userGreeting.textContent = 'ضيف';
+                    currentUser = 'ضيف';
+                } else {
+                    userGreeting.textContent = currentUser;
+                }
 
-function handleAuth() {
-  const email = document.getElementById('emailInput').value.trim();
-  const password = document.getElementById('passwordInput').value.trim();
-  const username = document.getElementById('usernameInput').value.trim();
-  const errorMsg = document.getElementById('errorMsg');
-  
-  errorMsg.textContent = '';
-  
-  // التحقق من المدخلات
-  if (!email || !password) {
-    errorMsg.textContent = '❌ من فضلك أدخل البريد وكلمة المرور';
-    return;
-  }
-  
-  if (!email.includes('@') || !email.includes('.')) {
-    errorMsg.textContent = '❌ البريد الإلكتروني غير صحيح';
-    return;
-  }
-  
-  if (password.length < 6) {
-    errorMsg.textContent = '❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-    return;
-  }
-  
-  if (GameState.isSignupMode) {
-    if (!username || username.length < 3) {
-      errorMsg.textContent = '❌ اسم المستخدم يجب أن يكون 3 أحرف على الأقل';
-      return;
-    }
-    if (!/^[a-zA-Z0-9_\u0600-\u06FF]+$/.test(username)) {
-      errorMsg.textContent = '❌ اسم المستخدم يجب أن يكون حروف وأرقام فقط';
-      return;
-    }
-    signupUser(email, password, username);
-  } else {
-    loginUser(email, password);
-  }
-}
+                // عدد الطلبات
+                let ordersCount = 0;
+                if (!isGuest && currentUser !== 'ضيف') {
+                    ordersCount = getOrdersForUser(currentUser);
+                } else {
+                    // للضيف نعرض 0 أو يمكن تخزينه بشكل منفصل، لكن نعرض 0
+                    ordersCount = 0;
+                }
+                orderCountSpan.textContent = `عدد الطلبات: ${ordersCount}`;
 
-// ==================== دالة محلية للتسجيل (مؤقتة - بدون سيرفر) ====================
-function signupUser(email, password, username) {
-  // نتحقق لو المستخدم موجود
-  const users = JSON.parse(localStorage.getItem('dm_users') || '[]');
-  
-  if (users.find(u => u.email === email)) {
-    document.getElementById('errorMsg').textContent = '❌ البريد مسجل بالفعل';
-    return;
-  }
-  
-  if (users.find(u => u.username.toLowerCase() === username.toLowerCase())) {
-    document.getElementById('errorMsg').textContent = '❌ اسم المستخدم محجوز';
-    return;
-  }
-  
-  // إنشاء المستخدم
-  const newUser = {
-    id: 'user_' + Date.now(),
-    email: email,
-    username: username,
-    password: btoa(password), // تشفير بسيط
-    division: 1,
-    matchesPlayed: 0,
-    wins: 0,
-    losses: 0,
-    trophies: 0,
-    createdAt: new Date().toISOString()
-  };
-  
-  users.push(newUser);
-  localStorage.setItem('dm_users', JSON.stringify(users));
-  
-  // تسجيل الدخول تلقائياً
-  const safeUser = { ...newUser };
-  delete safeUser.password;
-  GameState.user = safeUser;
-  GameState.isLoggedIn = true;
-  
-  localStorage.setItem('dm_current_user', JSON.stringify(safeUser));
-  
-  showNotification('✅ تم إنشاء الحساب بنجاح!');
-  loadMainMenu();
-  goToScreen('mainMenu');
-}
+                // بناء بطاقات الخدمات
+                servicesGrid.innerHTML = '';
+                SERVICES.forEach(service => {
+                    const card = document.createElement('div');
+                    card.className = 'service-card';
 
-function loginUser(email, password) {
-  const users = JSON.parse(localStorage.getItem('dm_users') || '[]');
-  const user = users.find(u => u.email === email);
-  
-  if (!user) {
-    document.getElementById('errorMsg').textContent = '❌ البريد غير مسجل';
-    return;
-  }
-  
-  if (user.password !== btoa(password)) {
-    document.getElementById('errorMsg').textContent = '❌ كلمة المرور غير صحيحة';
-    return;
-  }
-  
-  const safeUser = { ...user };
-  delete safeUser.password;
-  GameState.user = safeUser;
-  GameState.isLoggedIn = true;
-  
-  localStorage.setItem('dm_current_user', JSON.stringify(safeUser));
-  
-  showNotification('✅ أهلاً بك ' + user.username);
-  loadMainMenu();
-  goToScreen('mainMenu');
-}
+                    card.innerHTML = `
+                        <div class="service-info">
+                            <span class="service-name">${service.name}</span>
+                            <span class="service-price">${service.price}</span>
+                        </div>
+                        <div class="service-desc">${service.desc || ''}</div>
+                        <button class="btn-service" data-service="${service.name}">
+                            <i>🛒</i> أريد هذه الخدمة
+                        </button>
+                    `;
 
-function handleLogout() {
-  if (!confirm('هل تريد تسجيل الخروج؟')) return;
-  
-  localStorage.removeItem('dm_current_user');
-  GameState.user = null;
-  GameState.isLoggedIn = false;
-  
-  document.getElementById('emailInput').value = '';
-  document.getElementById('passwordInput').value = '';
-  document.getElementById('usernameInput').value = '';
-  
-  showNotification('تم تسجيل الخروج');
-  goToScreen('authScreen');
-}
+                    const btn = card.querySelector('.btn-service');
+                    btn.addEventListener('click', () => {
+                        handleServiceRequest(service.name);
+                    });
 
-// ==================== تحميل القائمة ====================
-function loadMainMenu() {
-  if (!GameState.user) return;
-  
-  const user = GameState.user;
-  const division = DIVISIONS[(user.division || 1) - 1] || DIVISIONS[0];
-  
-  document.getElementById('displayName').textContent = user.username;
-  document.getElementById('displayDiv').textContent = division.emoji + ' ' + division.name;
-  document.getElementById('userAvatar').textContent = user.username.charAt(0).toUpperCase();
-}
+                    servicesGrid.appendChild(card);
+                });
+            }
 
-// ==================== بدء مباراة أوفلاين ====================
-function startOfflineMatch(difficulty) {
-  GameState.aiDifficulty = difficulty;
-  
-  const difficultyNames = {
-    easy: 'سهل',
-    medium: 'متوسط',
-    hard: 'صعب'
-  };
-  
-  showNotification('🎮 جاري تحضير مباراة ' + difficultyNames[difficulty] + '...');
-  
-  // هنكملها في الملف التالي
-  setTimeout(() => {
-    alert('سيتم فتح شاشة اللعب في الملف التالي!\n\nالصعوبة: ' + difficultyNames[difficulty]);
-  }, 800);
-}
+            // === معالجة طلب الخدمة ===
+            function handleServiceRequest(serviceName) {
+                // احسب اسم المستخدم الحالي
+                let userNameForMessage = (isGuest || !currentUser) ? 'ضيف' : currentUser;
 
-// ==================== التهيئة ====================
-function init() {
-  // شاشة الترحيب لمدة 3 ثواني
-  setTimeout(() => {
-    // هل المستخدم مسجل دخول؟
-    const savedUser = localStorage.getItem('dm_current_user');
-    
-    if (savedUser) {
-      try {
-        GameState.user = JSON.parse(savedUser);
-        GameState.isLoggedIn = true;
-        loadMainMenu();
-        goToScreen('mainMenu');
-      } catch (e) {
-        goToScreen('authScreen');
-      }
-    } else {
-      goToScreen('authScreen');
-    }
-  }, 3000);
-  
-  // ربط حدث تبديل الوضع
-  document.getElementById('switchText').addEventListener('click', toggleAuthMode);
-  
-  // التنقل بـ Enter
-  document.getElementById('passwordInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleAuth();
-  });
-  
-  document.getElementById('emailInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') document.getElementById('passwordInput').focus();
-  });
-}
+                // زيادة عدد الطلبات إذا لم يكن ضيف
+                if (!isGuest && currentUser && currentUser !== 'ضيف') {
+                    const newCount = incrementOrderForUser(currentUser);
+                    orderCountSpan.textContent = `عدد الطلبات: ${newCount}`;
+                } else {
+                    // للضيف: لا نزيد العداد ولكن يمكن أن نظهر رسالة؟ لا نغير
+                    // لكن يمكننا ترك العداد 0
+                }
 
-// ==================== تشغيل ====================
-window.addEventListener('DOMContentLoaded', init);
-</script>
+                // تكوين رسالة الواتساب
+                const message = `انا ${userNameForMessage} اريد هذه الخدمه ${serviceName}`;
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/${COMPANY_WHATSAPP}?text=${encodedMessage}`;
 
+                window.open(whatsappUrl, '_blank');
+            }
+
+            // === تسجيل الدخول ===
+            function login() {
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!username) {
+                    authError.textContent = 'الرجاء إدخال اسم المستخدم';
+                    return;
+                }
+
+                const users = getUsers();
+
+                if (users[username]) {
+                    // المستخدم موجود
+                    if (users[username].password === password || users[username].password === '') {
+                        // كلمة المرور صحيحة أو الحساب بدون كلمة مرور
+                        currentUser = username;
+                        isGuest = false;
+                        authError.textContent = '';
+                        // تخزين الجلسة؟ لا داعي لكن يمكن
+                        goToMain();
+                    } else {
+                        authError.textContent = 'كلمة المرور غير صحيحة';
+                    }
+                } else {
+                    authError.textContent = 'المستخدم غير موجود، قم بإنشاء حساب';
+                }
+            }
+
+            // === إنشاء حساب ===
+            function register() {
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!username) {
+                    authError.textContent = 'الرجاء إدخال اسم المستخدم';
+                    return;
+                }
+
+                const users = getUsers();
+
+                if (users[username]) {
+                    authError.textContent = 'اسم المستخدم موجود بالفعل، سجل الدخول';
+                    return;
+                }
+
+                // إنشاء مستخدم جديد
+                users[username] = { password: password || '' };
+                saveUsers(users);
+
+                // تخزين عدد الطلبات لهذا المستخدم = 0
+                localStorage.setItem(`skymaster_orders_${username}`, '0');
+
+                currentUser = username;
+                isGuest = false;
+                authError.textContent = '';
+                goToMain();
+            }
+
+            // === الدخول كضيف ===
+            function loginAsGuest() {
+                currentUser = 'ضيف';
+                isGuest = true;
+                authError.textContent = '';
+                goToMain();
+            }
+
+            // === ربط الأحداث ===
+            loginBtn.addEventListener('click', login);
+            registerBtn.addEventListener('click', register);
+            guestBtn.addEventListener('click', loginAsGuest);
+
+            // السماح بالضغط على Enter في حقول الإدخال
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') login();
+            });
+            usernameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') login();
+            });
+
+            // === بدء التطبيق ===
+            function init() {
+                // إخفاء جميع الشاشات ثم إظهار الترحيب
+                welcomeScreen.classList.remove('hidden');
+                authScreen.classList.add('hidden');
+                mainScreen.classList.add('hidden');
+
+                // بعد ثانيتين ونصف، الانتقال إلى شاشة تسجيل الدخول
+                setTimeout(() => {
+                    welcomeScreen.classList.add('hidden');
+                    authScreen.classList.remove('hidden');
+                }, 2500);
+
+                // تحميل الخدمات مبدئياً (لن تظهر إلا بعد الدخول)
+                // لكن نجهزها مسبقاً
+            }
+
+            init();
+
+            // إتاحة إعادة تعيين الحالة إذا لزم (لا حاجة)
+        })();
+    </script>
 </body>
 </html>

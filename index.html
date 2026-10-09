@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DESHA & MARO FQ GAMES</title>
+<style>
+/* ==================== RESET & BASE ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  user-select: none;
+}
+
+/* ==================== SCREENS ==================== */
+.screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  animation: fadeIn 0.4s ease;
+}
+
+.screen.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px #DC143C); }
+  50% { transform: scale(1.06); filter: drop-shadow(0 0 30px #FFD700); }
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 15px #DC143C, 0 0 30px #8B0000; }
+  50% { text-shadow: 0 0 25px #FFD700, 0 0 50px #DC143C; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== SPLASH SCREEN ==================== */
+#splashScreen {
+  background: radial-gradient(circle at center, #2a0000 0%, #0a0a0a 60%, #000 100%);
+}
+
+.game-logo {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  animation: pulse 2.5s infinite;
+  margin-bottom: 20px;
+}
+
+.game-title {
+  font-size: 26px;
+  font-weight: bold;
+  color: #FFD700;
+  letter-spacing: 2px;
+  text-align: center;
+  animation: glow 2s infinite;
+  margin-bottom: 10px;
+  padding: 0 15px;
+}
+
+.game-subtitle {
+  font-size: 13px;
+  color: #DC143C;
+  letter-spacing: 4px;
+  margin-bottom: 40px;
+}
+
+.loading-bar {
+  width: 200px;
+  height: 4px;
+  background: #1a0000;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 60px;
+  border: 1px solid #8B0000;
+}
+
+.loading-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #DC143C, #FFD700);
+  animation: loadFill 2.5s ease forwards;
+  box-shadow: 0 0 10px #DC143C;
+}
+
+@keyframes loadFill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+.dev-section {
+  position: absolute;
+  bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: slideUp 1s ease 1s both;
+}
+
+.dev-logo {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 2px solid #FFD700;
+  padding: 3px;
+  background: #0a0a0a;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.dev-label {
+  font-size: 10px;
+  color: #888;
+  letter-spacing: 2px;
+}
+
+.dev-name {
+  font-size: 15px;
+  color: #FFD700;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #DC143C;
+}
+
+/* ==================== AUTH SCREEN ==================== */
+#authScreen {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 50%, #0a0a0a 100%);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 380px;
+  background: rgba(10, 0, 0, 0.85);
+  border: 2px solid #8B0000;
+  border-radius: 20px;
+  padding: 30px 25px;
+  box-shadow: 0 0 40px rgba(220, 20, 60, 0.4), inset 0 0 20px rgba(220, 20, 60, 0.1);
+  animation: slideUp 0.5s ease;
+}
+
+.auth-logo-small {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 15px;
+  filter: drop-shadow(0 0 10px #DC143C);
+}
+
+.auth-title {
+  text-align: center;
+  color: #FFD700;
+  font-size: 22px;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  color: #FFD700;
+  font-size: 13px;
+  margin-bottom: 6px;
+  padding-right: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background: #0d0d0d;
+  border: 2px solid #8B0000;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 15px;
+  transition: all 0.3s;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: #FFD700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  background: #150000;
+}
+
+.input-group input::placeholder {
+  color: #555;
+}
+
+.btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #DC143C, #8B0000);
+  color: #fff;
+  border: 2px solid #FFD700;
+  box-shadow: 0 5px 20px rgba(220, 20, 60, 0.5);
+}
+
+.btn-primary:active {
+  background: linear-gradient(135deg, #8B0000, #DC143C);
+  box-shadow: 0 0 25px #DC143C;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #FFD700;
+  border: 2px solid #FFD700;
+}
+
+.btn-secondary:active {
+  background: #FFD700;
+  color: #000;
+}
+
+.switch-mode {
+  text-align: center;
+  color: #888;
+  font-size: 13px;
+  margin-top: 20px;
+}
+
+.switch-mode span {
+  color: #FFD700;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.error-msg {
+  color: #FF4444;
+  text-align: center;
+  font-size: 13px;
+  margin-top: 10px;
+  min-height: 18px;
+}
+
+/* ==================== MAIN MENU ==================== */
+#mainMenu {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 100%);
+  justify-content: flex-start;
+  padding-top: 20px;
+}
+
+.top-bar {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: rgba(26, 0, 0, 0.8);
+  border: 1px solid #8B0000;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  animation: slideUp 0.5s ease;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #DC143C, #8B0000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #FFD700;
+  font-weight: bold;
+  border: 2px solid #FFD700;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #FFD700;
+  font-weight: bold;
+}
+
+.user-div {
+  font-size: 11px;
+  color: #DC143C;
+}
+
+.logout-btn {
+  background: #8B0000;
+  border: 1px solid #DC143C;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.menu-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 15px #DC143C);
+}
+
+.menu-title {
+  color: #FFD700;
+  font-size: 20px;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.menu-buttons {
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, #1a0000, #2a0000);
+  border: 2px solid #DC143C;
+  border-radius: 15px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.menu-btn:active::before {
+  left: 100%;
+}
+
+.menu-btn:active {
+  background: linear-gradient(135deg, #DC143C, #8B0000);
+  border-color: #FFD700;
+  transform: scale(0.98);
+  box-shadow: 0 0 25px #DC143C;
+}
+
+.menu-btn .icon {
+  font-size: 24px;
+}
+
+.menu-btn .text {
+  flex: 1;
+  text-align: right;
+  padding-right: 15px;
+}
+
+.menu-btn .arrow {
+  color: #FFD700;
+  font-size: 20px;
+}
+
+/* ==================== OFFLINE SCREEN ==================== */
+#offlineScreen {
+  background: linear-gradient(135deg, #0a0a0a, #1a0000);
+}
+
+.screen-header {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back-btn {
+  background: #8B0000;
+  border: 2px solid #FFD700;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+}
+
+.screen-title {
+  color: #FFD700;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.difficulty-container {
+  width: 100%;
+  max-width: 350px;
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.difficulty-title {
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.diff-btn {
+  padding: 20px;
+  border-radius: 15px;
+  border: 2px solid;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.diff-btn:active {
+  transform: scale(0.97);
+}
+
+.diff-easy {
+  background: linear-gradient(135deg, #0a3a0a, #0a5a0a);
+  border-color: #00FF00;
+  color: #fff;
+}
+
+.diff-easy:active {
+  box-shadow: 0 0 25px #00FF00;
+}
+
+.diff-medium {
+  background: linear-gradient(135deg, #3a3a0a, #5a5a0a);
+  border-color: #FFD700;
+  color: #fff;
+}
+
+.diff-medium:active {
+  box-shadow: 0 0 25px #FFD700;
+}
+
+.diff-hard {
+  background: linear-gradient(135deg, #3a0a0a, #5a0a0a);
+  border-color: #DC143C;
+  color: #fff;
+}
+
+.diff-hard:active {
+  box-shadow: 0 0 25px #DC143C;
+}
+
+.diff-btn .diff-icon {
+  font-size: 28px;
+}
+
+.diff-btn .diff-text {
+  flex: 1;
+  padding-right: 15px;
+  text-align: right;
+}
+
+.diff-btn .diff-desc {
+  font-size: 11px;
+  opacity: 0.8;
+  font-weight: normal;
+  display: block;
+  margin-top: 3px;
+}
+
+/* ==================== NOTIFICATION ==================== */
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: linear-gradient(135deg, #DC143C, #8B0000);
+  color: #fff;
+  padding: 12px 25px;
+  border-radius: 12px;
+  border: 2px solid #FFD700;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 9999;
+  transition: transform 0.4s ease;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+  max-width: 90%;
+  text-align: center;
+}
+
+.notification.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ==================== SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #DC143C;
+  border-radius: 10px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-height: 600px) {
+  .game-logo { width: 120px; height: 120px; }
+  .game-title { font-size: 20px; }
+  .menu-logo { width: 70px; height: 70px; }
+  .menu-btn { padding: 14px 18px; font-size: 14px; }
+  .dev-section { bottom: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== شاشة الترحيب ==================== -->
+<div id="splashScreen" class="screen active">
+  <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" 
+       class="game-logo" 
+       alt="Game Logo"
+       onerror="this.style.display='none'">
+  <h1 class="game-title">DESHA & MARO FQ GAMES</h1>
+  <p class="game-subtitle">FOOTBALL QUIZ</p>
+  <div class="loading-bar">
+    <div class="loading-fill"></div>
+  </div>
+  <div class="dev-section">
+    <span class="dev-label">DEVELOPED BY</span>
+    <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/dcbe3ae7-7c18-43cf-8e70-c2b73089969e.png" 
+         class="dev-logo" 
+         alt="Developer Logo"
+         onerror="this.style.display='none'">
+    <span class="dev-name">DESHA.245</span>
+  </div>
+</div>
+
+<!-- ==================== شاشة تسجيل الدخول ==================== -->
+<div id="authScreen" class="screen">
+  <div class="auth-container">
+    <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" 
+         class="auth-logo-small" 
+         alt="Logo"
+         onerror="this.style.display='none'">
+    <h2 class="auth-title" id="authTitle">تسجيل الدخول</h2>
+    
+    <div class="input-group" id="usernameGroup" style="display:none;">
+      <label>اسم المستخدم</label>
+      <input type="text" id="usernameInput" placeholder="مثال: Mohamed77" autocomplete="off">
+    </div>
+    
+    <div class="input-group">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="emailInput" placeholder="example@gmail.com" autocomplete="off">
+    </div>
+    
+    <div class="input-group">
+      <label>كلمة المرور</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="off">
+    </div>
+    
+    <button class="btn btn-primary" id="authBtn" onclick="handleAuth()">دخول</button>
+    
+    <p class="switch-mode">
+      <span id="switchText">ليس لديك حساب؟ سجل الآن</span>
+    </p>
+    
+    <p class="error-msg" id="errorMsg"></p>
+  </div>
+</div>
+
+<!-- ==================== القائمة الرئيسية ==================== -->
+<div id="mainMenu" class="screen">
+  <div class="top-bar">
+    <div class="user-info">
+      <div class="user-avatar" id="userAvatar">M</div>
+      <div class="user-details">
+        <span class="user-name" id="displayName">Player</span>
+        <span class="user-div" id="displayDiv">هاوي ⚽</span>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="handleLogout()">خروج</button>
+  </div>
+  
+  <img src="https://i.supaimg.com/9b836138-e901-4e3b-a57b-85af24b46cef/c19e453c-1c31-41e9-90d7-6e56189f017b.png" 
+       class="menu-logo" 
+       alt="Logo"
+       onerror="this.style.display='none'">
+  <h2 class="menu-title">القائمة الرئيسية</h2>
+  
+  <div class="menu-buttons">
+    <button class="menu-btn" onclick="goToScreen('divisionScreen')">
+      <span class="icon">🎯</span>
+      <span class="text">الديفجنات</span>
+      <span class="arrow">◄</span>
+    </button>
+    
+    <button class="menu-btn" onclick="goToScreen('onlineScreen')">
+      <span class="icon">🌐</span>
+      <span class="text">لعب أونلاين</span>
+      <span class="arrow">◄</span>
+    </button>
+    
+    <button class="menu-btn" onclick="goToScreen('offlineScreen')">
+      <span class="icon">📴</span>
+      <span class="text">وضع الأوفلاين</span>
+      <span class="arrow">◄</span>
+    </button>
+    
+    <button class="menu-btn" onclick="goToScreen('statsScreen')">
+      <span class="icon">📊</span>
+      <span class="text">الإحصائيات</span>
+      <span class="arrow">◄</span>
+    </button>
+  </div>
+</div>
+
+<!-- ==================== شاشة الأوفلاين ==================== -->
+<div id="offlineScreen" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goToScreen('mainMenu')">رجوع ►</button>
+    <span class="screen-title">الأوفلاين</span>
+  </div>
+  
+  <div class="difficulty-container">
+    <p class="difficulty-title">اختر مستوى الذكاء الاصطناعي</p>
+    
+    <button class="diff-btn diff-easy" onclick="startOfflineMatch('easy')">
+      <span class="diff-icon">🟢</span>
+      <span class="diff-text">
+        سهل
+        <span class="diff-desc">رد بطيء - دقة منخفضة</span>
+      </span>
+    </button>
+    
+    <button class="diff-btn diff-medium" onclick="startOfflineMatch('medium')">
+      <span class="diff-icon">🟡</span>
+      <span class="diff-text">
+        متوسط
+        <span class="diff-desc">رد متوسط - دقة معتدلة</span>
+      </span>
+    </button>
+    
+    <button class="diff-btn diff-hard" onclick="startOfflineMatch('hard')">
+      <span class="diff-icon">🔴</span>
+      <span class="diff-text">
+        صعب
+        <span class="diff-desc">رد سريع - دقة عالية</span>
+      </span>
+    </button>
+  </div>
+</div>
+
+<!-- ==================== شاشات مبدئية (سنكملها) ==================== -->
+<div id="divisionScreen" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goToScreen('mainMenu')">رجوع ►</button>
+    <span class="screen-title">الديفجنات</span>
+  </div>
+  <h2 style="color:#FFD700;margin-top:100px;">🎯 الديفجنات قريباً</h2>
+</div>
+
+<div id="onlineScreen" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goToScreen('mainMenu')">رجوع ►</button>
+    <span class="screen-title">أونلاين</span>
+  </div>
+  <h2 style="color:#FFD700;margin-top:100px;">🌐 الأونلاين قريباً</h2>
+</div>
+
+<div id="statsScreen" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goToScreen('mainMenu')">رجوع ►</button>
+    <span class="screen-title">الإحصائيات</span>
+  </div>
+  <h2 style="color:#FFD700;margin-top:100px;">📊 الإحصائيات قريباً</h2>
+</div>
+
+<!-- ==================== إشعار ==================== -->
+<div class="notification" id="notification"></div>
+
+<script>
+/* ================================================================
+   DESHA & MARO FQ GAMES - Core Script v1.0
+   ================================================================ */
+
+// ==================== حالة اللعبة ====================
+const GameState = {
+  user: null,           // بيانات المستخدم
+  isLoggedIn: false,
+  isSignupMode: false,
+  currentScreen: 'splashScreen',
+  aiDifficulty: 'medium',
+  currentMatch: null
+};
+
+// ==================== التقسيمات ====================
+const DIVISIONS = [
+  { id: 1, name: "هاوي",         emoji: "🥉", matches: 10, aiLevel: "very_easy" },
+  { id: 2, name: "نصف محترف",    emoji: "🥈", matches: 10, aiLevel: "easy" },
+  { id: 3, name: "محترف",        emoji: "🥇", matches: 10, aiLevel: "easy_medium" },
+  { id: 4, name: "متميز",        emoji: "⭐", matches: 15, aiLevel: "medium" },
+  { id: 5, name: "عالمي",        emoji: "🌟", matches: 15, aiLevel: "medium_hard" },
+  { id: 6, name: "مثقف",         emoji: "💎", matches: 20, aiLevel: "hard" },
+  { id: 7, name: "مختم اللعبة",  emoji: "👑", matches: 25, aiLevel: "very_hard" }
+];
+
+// ==================== التنقل بين الشاشات ====================
+function goToScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(screenId);
+  if (target) {
+    target.classList.add('active');
+    GameState.currentScreen = screenId;
+  }
+}
+
+// ==================== الإشعارات ====================
+function showNotification(msg, duration = 2500) {
+  const notif = document.getElementById('notification');
+  notif.textContent = msg;
+  notif.classList.add('show');
+  setTimeout(() => notif.classList.remove('show'), duration);
+}
+
+// ==================== تسجيل الدخول / التسجيل ====================
+function toggleAuthMode() {
+  GameState.isSignupMode = !GameState.isSignupMode;
+  
+  const usernameGroup = document.getElementById('usernameGroup');
+  const authTitle = document.getElementById('authTitle');
+  const authBtn = document.getElementById('authBtn');
+  const switchText = document.getElementById('switchText');
+  
+  if (GameState.isSignupMode) {
+    usernameGroup.style.display = 'block';
+    authTitle.textContent = 'إنشاء حساب جديد';
+    authBtn.textContent = 'سجل الآن';
+    switchText.textContent = 'لديك حساب؟ سجل الدخول';
+  } else {
+    usernameGroup.style.display = 'none';
+    authTitle.textContent = 'تسجيل الدخول';
+    authBtn.textContent = 'دخول';
+    switchText.textContent = 'ليس لديك حساب؟ سجل الآن';
+  }
+  
+  document.getElementById('errorMsg').textContent = '';
+}
+
+function handleAuth() {
+  const email = document.getElementById('emailInput').value.trim();
+  const password = document.getElementById('passwordInput').value.trim();
+  const username = document.getElementById('usernameInput').value.trim();
+  const errorMsg = document.getElementById('errorMsg');
+  
+  errorMsg.textContent = '';
+  
+  // التحقق من المدخلات
+  if (!email || !password) {
+    errorMsg.textContent = '❌ من فضلك أدخل البريد وكلمة المرور';
+    return;
+  }
+  
+  if (!email.includes('@') || !email.includes('.')) {
+    errorMsg.textContent = '❌ البريد الإلكتروني غير صحيح';
+    return;
+  }
+  
+  if (password.length < 6) {
+    errorMsg.textContent = '❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+    return;
+  }
+  
+  if (GameState.isSignupMode) {
+    if (!username || username.length < 3) {
+      errorMsg.textContent = '❌ اسم المستخدم يجب أن يكون 3 أحرف على الأقل';
+      return;
+    }
+    if (!/^[a-zA-Z0-9_\u0600-\u06FF]+$/.test(username)) {
+      errorMsg.textContent = '❌ اسم المستخدم يجب أن يكون حروف وأرقام فقط';
+      return;
+    }
+    signupUser(email, password, username);
+  } else {
+    loginUser(email, password);
+  }
+}
+
+// ==================== دالة محلية للتسجيل (مؤقتة - بدون سيرفر) ====================
+function signupUser(email, password, username) {
+  // نتحقق لو المستخدم موجود
+  const users = JSON.parse(localStorage.getItem('dm_users') || '[]');
+  
+  if (users.find(u => u.email === email)) {
+    document.getElementById('errorMsg').textContent = '❌ البريد مسجل بالفعل';
+    return;
+  }
+  
+  if (users.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+    document.getElementById('errorMsg').textContent = '❌ اسم المستخدم محجوز';
+    return;
+  }
+  
+  // إنشاء المستخدم
+  const newUser = {
+    id: 'user_' + Date.now(),
+    email: email,
+    username: username,
+    password: btoa(password), // تشفير بسيط
+    division: 1,
+    matchesPlayed: 0,
+    wins: 0,
+    losses: 0,
+    trophies: 0,
+    createdAt: new Date().toISOString()
+  };
+  
+  users.push(newUser);
+  localStorage.setItem('dm_users', JSON.stringify(users));
+  
+  // تسجيل الدخول تلقائياً
+  const safeUser = { ...newUser };
+  delete safeUser.password;
+  GameState.user = safeUser;
+  GameState.isLoggedIn = true;
+  
+  localStorage.setItem('dm_current_user', JSON.stringify(safeUser));
+  
+  showNotification('✅ تم إنشاء الحساب بنجاح!');
+  loadMainMenu();
+  goToScreen('mainMenu');
+}
+
+function loginUser(email, password) {
+  const users = JSON.parse(localStorage.getItem('dm_users') || '[]');
+  const user = users.find(u => u.email === email);
+  
+  if (!user) {
+    document.getElementById('errorMsg').textContent = '❌ البريد غير مسجل';
+    return;
+  }
+  
+  if (user.password !== btoa(password)) {
+    document.getElementById('errorMsg').textContent = '❌ كلمة المرور غير صحيحة';
+    return;
+  }
+  
+  const safeUser = { ...user };
+  delete safeUser.password;
+  GameState.user = safeUser;
+  GameState.isLoggedIn = true;
+  
+  localStorage.setItem('dm_current_user', JSON.stringify(safeUser));
+  
+  showNotification('✅ أهلاً بك ' + user.username);
+  loadMainMenu();
+  goToScreen('mainMenu');
+}
+
+function handleLogout() {
+  if (!confirm('هل تريد تسجيل الخروج؟')) return;
+  
+  localStorage.removeItem('dm_current_user');
+  GameState.user = null;
+  GameState.isLoggedIn = false;
+  
+  document.getElementById('emailInput').value = '';
+  document.getElementById('passwordInput').value = '';
+  document.getElementById('usernameInput').value = '';
+  
+  showNotification('تم تسجيل الخروج');
+  goToScreen('authScreen');
+}
+
+// ==================== تحميل القائمة ====================
+function loadMainMenu() {
+  if (!GameState.user) return;
+  
+  const user = GameState.user;
+  const division = DIVISIONS[(user.division || 1) - 1] || DIVISIONS[0];
+  
+  document.getElementById('displayName').textContent = user.username;
+  document.getElementById('displayDiv').textContent = division.emoji + ' ' + division.name;
+  document.getElementById('userAvatar').textContent = user.username.charAt(0).toUpperCase();
+}
+
+// ==================== بدء مباراة أوفلاين ====================
+function startOfflineMatch(difficulty) {
+  GameState.aiDifficulty = difficulty;
+  
+  const difficultyNames = {
+    easy: 'سهل',
+    medium: 'متوسط',
+    hard: 'صعب'
+  };
+  
+  showNotification('🎮 جاري تحضير مباراة ' + difficultyNames[difficulty] + '...');
+  
+  // هنكملها في الملف التالي
+  setTimeout(() => {
+    alert('سيتم فتح شاشة اللعب في الملف التالي!\n\nالصعوبة: ' + difficultyNames[difficulty]);
+  }, 800);
+}
+
+// ==================== التهيئة ====================
+function init() {
+  // شاشة الترحيب لمدة 3 ثواني
+  setTimeout(() => {
+    // هل المستخدم مسجل دخول؟
+    const savedUser = localStorage.getItem('dm_current_user');
+    
+    if (savedUser) {
+      try {
+        GameState.user = JSON.parse(savedUser);
+        GameState.isLoggedIn = true;
+        loadMainMenu();
+        goToScreen('mainMenu');
+      } catch (e) {
+        goToScreen('authScreen');
+      }
+    } else {
+      goToScreen('authScreen');
+    }
+  }, 3000);
+  
+  // ربط حدث تبديل الوضع
+  document.getElementById('switchText').addEventListener('click', toggleAuthMode);
+  
+  // التنقل بـ Enter
+  document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleAuth();
+  });
+  
+  document.getElementById('emailInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') document.getElementById('passwordInput').focus();
+  });
+}
+
+// ==================== تشغيل ====================
+window.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
